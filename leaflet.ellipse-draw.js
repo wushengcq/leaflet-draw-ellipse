@@ -12,13 +12,14 @@
      * Leaflet.draw-ellipse assumes that you have already included the Leaflet, Leaflet-draw, and Leaflet-ellipse libraries.
      */
 
-    L.drawLocal.draw.toolbar.buttons.ellipse = 'Draw an ellipse';
+    //L.drawLocal.draw.toolbar.buttons.ellipse = 'Draw an ellipse';
+    L.drawLocal.draw.toolbar.buttons.ellipse = '绘制椭圆';
 
     L.drawLocal.draw.handlers.ellipse = {
         tooltip: {
-            start: 'Click and drag to draw ellipse.'
+            start: '点击并拖拽开始绘制'
         },
-        radius: 'Radius'
+        radius: '半径'
     };
 
     L.SimpleShape = {};
@@ -165,8 +166,8 @@
         },
 
         _drawShape: function(latlng) {
-            let curent_x = L.latLng(latlng.lat, 0);
-            let current_y = L.latLng(0, latlng.lng);
+            var curent_x = L.latLng(latlng.lat, 0);
+            var current_y = L.latLng(0, latlng.lng);
             radius = [this._ylatlng.distanceTo(current_y), this._xlatlng.distanceTo(curent_x)];
             if (!this._shape) {
                 this._shape = new L.Ellipse(this._startLatLng, radius, 0, this.options.shapeOptions);
@@ -189,8 +190,8 @@
             this._tooltip.updatePosition(latlng);
             if (this._isDrawing) {
                 this._drawShape(latlng);
-                let curent_x = L.latLng(latlng.lat, 0);
-                let current_y = L.latLng(0, latlng.lng);
+                var curent_x = L.latLng(latlng.lat, 0);
+                var current_y = L.latLng(0, latlng.lng);
                 radius = [this._ylatlng.distanceTo(current_y), this._xlatlng.distanceTo(curent_x)];
                 this._tooltip.updateContent({
                     text: this._endLabelText,
@@ -265,7 +266,7 @@
         },
 
         _getResizeMarkerPointX1: function(latlng) {
-            var tilt = 0;
+            var tilt = this._shape._tilt || 0;
             var radius = this._shape._radiusX;
             var xDelta = radius * Math.cos(tilt);
             var yDelta = radius * Math.sin(tilt);
@@ -274,7 +275,7 @@
         },
 
         _getResizeMarkerPointX2: function(latlng) {
-            var tilt = 0;
+            var tilt = this._shape._tilt || 0;
             var radius = this._shape._radiusX;
             var xDelta = radius * Math.cos(tilt);
             var yDelta = radius * Math.sin(tilt);
@@ -283,7 +284,7 @@
         },
 
         _getResizeMarkerPointY1: function(latlng) {
-            var tilt = 0;
+            var tilt = this._shape._tilt || 0;
             var radius = this._shape._radiusY;
             var xDelta = radius * Math.sin(tilt);
             var yDelta = radius * Math.cos(tilt);
@@ -292,7 +293,7 @@
         },
 
         _getResizeMarkerPointY2: function(latlng) {
-            var tilt = 0;
+            var tilt = this._shape._tilt || 0;
             var radius = this._shape._radiusY;
             var xDelta = radius * Math.sin(tilt);
             var yDelta = radius * Math.cos(tilt);
@@ -301,7 +302,7 @@
         },
 
         _getRotateMarkerPoint: function(latlng) {
-            var tilt = 0;
+            var tilt = this._shape._tilt || 0;
             var radius = this._shape._radiusX + 20;
             var xDelta = radius * Math.cos(tilt);
             var yDelta = radius * Math.sin(tilt);
@@ -357,13 +358,15 @@
                 // Rotate the ellipse
                 this._shape.setTilt(tilt);
             } else if (xDelta < radius) {
-                var tilt = Math.acos(xDelta / radius) * L.LatLng.RAD_TO_DEG;
+                //var tilt = Math.acos(xDelta / radius) * L.LatLng.RAD_TO_DEG;
+                var tilt = Math.acos(xDelta / radius) * (180.0 / Math.PI);
                 if (point.x > movePoint.x) {
                     tilt = 180 - tilt;
                 }
                 if (point.y > movePoint.y) {
                     tilt = -1 * tilt;
                 }
+				// console.log(tilt);
                 // Rotate the ellipse
                 this._shape.setTilt(tilt);
             }
